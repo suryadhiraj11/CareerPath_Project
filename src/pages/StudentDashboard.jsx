@@ -3,12 +3,28 @@ import { Calendar, BookOpen, Target, Clock, CheckCircle } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 const StudentDashboard = () => {
-    const { user, sessions, careers } = useAppContext();
+    const { user, sessions, careers, activityLogs } = useAppContext();
 
     if (!user) return null;
 
     const mySessions = sessions.filter(s => s.userId === user.id);
-    const mySavedCareers = careers.filter(c => user.savedCareers.includes(c.id));
+    const mySavedCareers = careers.filter(c => user.savedCareers?.includes(c.id));
+
+    // Dynamic Profile Completion Calculation (Total: 100%)
+    let currentCompletion = 0;
+
+    // 1. Initial Assessment Taken (25%)
+    const hasTakenAssessment = activityLogs.some(log => log.userId === user.id && log.action.includes('completed Assessment'));
+    if (hasTakenAssessment) currentCompletion += 25;
+
+    // 2. Personalization/Customization (25%)
+    if (user.image) currentCompletion += 25;
+
+    // 3. Saved at least one Career Path (25%)
+    if (mySavedCareers.length > 0) currentCompletion += 25;
+
+    // 4. Booked at least one Session (25%)
+    if (mySessions.length > 0) currentCompletion += 25;
 
     return (
         <div className="container animate-fade-in" style={{ paddingBottom: '4rem' }}>
@@ -24,14 +40,14 @@ const StudentDashboard = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
                             <p className="stat-label">Profile Completion</p>
-                            <p className="stat-value">{user.profileCompleted}%</p>
+                            <p className="stat-value">{currentCompletion}%</p>
                         </div>
                         <div className="card-icon" style={{ marginBottom: 0 }}>
                             <CheckCircle size={24} />
                         </div>
                     </div>
                     <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', marginTop: '1rem', overflow: 'hidden' }}>
-                        <div style={{ width: `${user.profileCompleted}%`, height: '100%', background: 'var(--gradient-primary)' }}></div>
+                        <div style={{ width: `${currentCompletion}%`, height: '100%', background: 'var(--gradient-primary)', transition: 'width 0.5s ease' }}></div>
                     </div>
                 </div>
 

@@ -209,15 +209,7 @@ export const AppProvider = ({ children }) => {
         if (!activeUser) return;
         logActivity(activeUser.id, activeUser.name, `completed Assessment (matched: ${topCategory})`);
 
-        // Update profile completion if it was empty
-        setUsers(prevUsers => prevUsers.map(u => {
-            if (u.id === activeUser.id) {
-                const updatedUser = { ...u, profileCompleted: Math.max(u.profileCompleted, 50) };
-                setActiveUser(updatedUser);
-                return updatedUser;
-            }
-            return u;
-        }));
+        // Removed manual stat update; computed dynamically downstream now
     };
 
 

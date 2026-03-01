@@ -3,7 +3,7 @@ import { Users, Calendar, BookOpen, TrendingUp, CheckCircle, Clock } from 'lucid
 import { useAppContext } from '../context/AppContext';
 
 const AdminDashboard = () => {
-    const { users, sessions, careers, updateSessionStatus } = useAppContext();
+    const { users, sessions, careers, counselors, resources, updateSessionStatus, removeCounselor, removeResource } = useAppContext();
     const [activeTab, setActiveTab] = useState('Sessions Overview'); // Set to default to show feature
 
     const studentCount = users.filter(u => u.role === 'student').length;
@@ -69,7 +69,7 @@ const AdminDashboard = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <div>
                             <p style={{ color: '#6b7280', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 500 }}>Resources</p>
-                            <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#111827' }}>8</h2>
+                            <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#111827' }}>{resources?.length || 0}</h2>
                         </div>
                         <div style={{ background: '#fff7ed', color: '#ea580c', padding: '0.6rem', borderRadius: '50%' }}>
                             <TrendingUp size={24} />
@@ -107,10 +107,10 @@ const AdminDashboard = () => {
                     <p style={{ color: '#6b7280', fontSize: '0.9rem', marginBottom: '2rem' }}>Review all counselor bookings requested by users.</p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        {sessions.length === 0 ? (
-                            <p style={{ color: '#6b7280', textAlign: 'center', padding: '2rem' }}>No sessions have been booked yet.</p>
+                        {sessions.filter(s => s.status !== 'cancelled').length === 0 ? (
+                            <p style={{ color: '#6b7280', textAlign: 'center', padding: '2rem' }}>No active sessions found.</p>
                         ) : (
-                            sessions.map(session => {
+                            sessions.filter(s => s.status !== 'cancelled').map(session => {
                                 const student = users.find(u => u.id === session.userId);
 
                                 return (
@@ -193,6 +193,7 @@ const AdminDashboard = () => {
                                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', border: '1px solid #e5e7eb', borderRadius: '12px', background: '#fff' }}>
                                     <div>
                                         <h4 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#111827', margin: 0, marginBottom: '0.25rem' }}>{student.name}</h4>
+                                        <p style={{ color: '#4b5563', fontSize: '0.9rem', margin: '0 0 0.25rem 0' }}>{student.email}</p>
                                         <p style={{ color: '#6b7280', fontSize: '0.85rem', margin: 0 }}>Last active: 2/28/2026</p>
                                     </div>
 
@@ -217,9 +218,74 @@ const AdminDashboard = () => {
                 </div>
             )}
 
-            {['Counselor Management', 'Resources'].includes(activeTab) && (
-                <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '16px', padding: '2rem', textAlign: 'center', color: '#6b7280' }}>
-                    This view is under construction.
+            {activeTab === 'Counselor Management' && (
+                <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '16px', padding: '2rem', paddingBottom: '3rem' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111827', marginBottom: '0.25rem' }}>Counselor Management</h3>
+                    <p style={{ color: '#6b7280', fontSize: '0.9rem', marginBottom: '2rem' }}>Review and manage counselors on the platform.</p>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        {counselors?.length === 0 ? (
+                            <p style={{ color: '#6b7280', textAlign: 'center', padding: '2rem' }}>No counselors found.</p>
+                        ) : (
+                            counselors?.map(counselor => (
+                                <div key={counselor.id} className="animate-fade-in" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', border: '1px solid #e5e7eb', borderRadius: '12px', background: '#fff' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                        <img src={counselor.image} alt={counselor.name} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }} />
+                                        <div>
+                                            <h4 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#111827', margin: 0 }}>{counselor.name}</h4>
+                                            <p style={{ color: '#6b7280', fontSize: '0.85rem', margin: 0 }}>{counselor.specialization}</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button
+                                            onClick={() => {
+                                                if (window.confirm(`Remove counselor ${counselor.name}?`)) {
+                                                    removeCounselor(counselor.id);
+                                                }
+                                            }}
+                                            style={{ background: '#fee2e2', color: '#ef4444', padding: '0.5rem 1rem', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'Resources' && (
+                <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '16px', padding: '2rem', paddingBottom: '3rem' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#111827', marginBottom: '0.25rem' }}>Resource Management</h3>
+                    <p style={{ color: '#6b7280', fontSize: '0.9rem', marginBottom: '2rem' }}>Review and manage resources on the platform.</p>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        {resources?.length === 0 ? (
+                            <p style={{ color: '#6b7280', textAlign: 'center', padding: '2rem' }}>No resources found.</p>
+                        ) : (
+                            resources?.map(resource => (
+                                <div key={resource.id} className="animate-fade-in" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', border: '1px solid #e5e7eb', borderRadius: '12px', background: '#fff' }}>
+                                    <div>
+                                        <h4 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#111827', margin: 0 }}>{resource.title}</h4>
+                                        <p style={{ color: '#6b7280', fontSize: '0.85rem', margin: 0 }}>{resource.category} • {resource.type}</p>
+                                    </div>
+                                    <div>
+                                        <button
+                                            onClick={() => {
+                                                if (window.confirm(`Remove resource ${resource.title}?`)) {
+                                                    removeResource(resource.id);
+                                                }
+                                            }}
+                                            style={{ background: '#fee2e2', color: '#ef4444', padding: '0.5rem 1rem', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
             )}
 

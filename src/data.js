@@ -166,22 +166,7 @@ export const counselorsData = [
     }
 ];
 
-export const resourcesData = [
-    {
-        id: 1,
-        title: 'Resume Building Masterclass',
-        type: 'Video',
-        category: 'Application Prep',
-        duration: '45 mins'
-    },
-    {
-        id: 2,
-        title: 'Common Interview Questions',
-        type: 'Guide',
-        category: 'Interview Prep',
-        duration: '20 mins read'
-    }
-];
+export const resourcesData = [];
 
 export const assessmentQuestions = [
     {

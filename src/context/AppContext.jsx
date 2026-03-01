@@ -61,7 +61,15 @@ export const AppProvider = ({ children }) => {
 
     const [resources, setResources] = useState(() => {
         const saved = localStorage.getItem('pathway_resources');
-        return saved ? JSON.parse(saved) : resourcesData;
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            // Auto-clear cache of the original default dummy resources 
+            if (parsed.length === 2 && parsed[0].title.includes('Resume Building')) {
+                return resourcesData;
+            }
+            return parsed;
+        }
+        return resourcesData;
     });
 
     // Persist state changes to localStorage

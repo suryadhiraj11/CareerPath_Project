@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { User, Mail, Lock, Shield, CheckCircle } from 'lucide-react';
+import { User, Mail, Lock, Shield, CheckCircle, LogOut } from 'lucide-react';
 
 const Profile = () => {
-    const { user, updateUser } = useAppContext();
+    const { user, updateUser, logout } = useAppContext();
+    const navigate = useNavigate();
 
     const [name, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email);
@@ -27,6 +29,11 @@ const Profile = () => {
         updateUser({ name, email, password, image });
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/signin');
     };
 
     if (!user) return null;
@@ -133,9 +140,12 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    <div style={{ marginTop: '1rem' }}>
-                        <button type="submit" className="btn btn-primary" style={{ padding: '0.85rem 2rem', fontWeight: 600, fontSize: '1rem' }}>
+                    <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', borderTop: '1px solid #e5e7eb', paddingTop: '2rem' }}>
+                        <button type="submit" className="btn btn-primary" style={{ padding: '0.85rem 2rem', fontWeight: 600, fontSize: '1rem', flex: 1 }}>
                             Save Changes
+                        </button>
+                        <button type="button" onClick={handleLogout} style={{ padding: '0.85rem 2rem', fontWeight: 600, fontSize: '1rem', flex: 1, background: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'background 0.2s' }}>
+                            <LogOut size={18} /> Sign Out Securely
                         </button>
                     </div>
                 </form>

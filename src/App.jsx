@@ -28,6 +28,7 @@ function App() {
               {/* Protected Routes (require login) */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/student-dashboard" element={<StudentDashboard />} />
                 <Route path="/careers" element={<CareerLibrary />} />

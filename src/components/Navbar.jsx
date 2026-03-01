@@ -73,7 +73,7 @@ const Navbar = () => {
                 {/* User Actions */}
                 <div className="nav-actions" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                     {/* User Info */}
-                    <NavLink to="/profile" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderRight: '1px solid #e5e7eb', paddingRight: '1.5rem', textDecoration: 'none', cursor: 'pointer' }}>
+                    <NavLink to="/profile" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', cursor: 'pointer' }}>
                         <div style={{ width: '32px', height: '32px', background: '#f3f4f6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                             {user.image ? (
                                 <img src={user.image} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -88,9 +88,8 @@ const Navbar = () => {
                             {user.role}
                         </span>
                     </NavLink>
-
-                    <button onClick={handleLogout} style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', fontWeight: 500, color: '#111827', cursor: 'pointer' }}>
-                        <LogOut size={18} /> Sign Out
+                    <button onClick={handleLogout} style={{ background: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'background 0.2s' }} title="Sign Out">
+                        <LogOut size={16} />
                     </button>
                 </div>
             </div>

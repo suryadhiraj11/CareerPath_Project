@@ -88,7 +88,13 @@ const Resources = () => {
                         {viewingResource.type === 'Image' ? (
                             <img src={viewingResource.url} alt={viewingResource.title} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '1rem' }} />
                         ) : (
-                            <iframe src={viewingResource.url} style={{ width: '100%', height: '100%', border: 'none' }} title={viewingResource.title} />
+                            <iframe
+                                src={viewingResource.url.includes('youtube.com/watch?v=') ? viewingResource.url.replace('watch?v=', 'embed/') : viewingResource.url.includes('youtu.be/') ? viewingResource.url.replace('youtu.be/', 'youtube.com/embed/') : viewingResource.url}
+                                style={{ width: '100%', height: '100%', border: 'none' }}
+                                title={viewingResource.title}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
                         )}
                     </div>
                 </div>
